@@ -14,12 +14,20 @@ from selenium.webdriver.common.by import By
 from functools import reduce
 import time
 
-# Keep track of stats
-postcode_count = 0
-city_count = 0
 
 # Configuration
 save_in_one_file = True
+
+# Initialize Selenium
+chrome_options = Options()
+#chrome_options.add_argument('--headless')
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+d = webdriver.Chrome(options=chrome_options)
+d.get('https://asuntojen.hintatiedot.fi/haku/')
+d.set_window_size(1200, 920)
+#d.maximize_window()
+
 
 def get_table(c, p, pg):
     # Return the HTML of the correct search term by city, postcode and page
@@ -51,6 +59,7 @@ def get_print_table():
     soup = BeautifulSoup(r.text, 'html.parser')
     # print(soup.prettify())
     table = soup.select("#mainTable")
+
 
 def is_valid_row(cell):
     # Assume the year built field is always filled
@@ -90,18 +99,18 @@ def scrape_data_for_table(table, city, postcode):
 
     return output_rows
 
+
 def save_data(output_rows, outputfile):
     with open(outputfile + '.csv', 'w') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(output_rows)
 
+
 def loadcities():
     citynames = []
 
-    alphabet = "E" #BCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
     for letter in alphabet:
-        #d.get('https://asuntojen.hintatiedot.fi/haku/')
-
         citydiv = d.find_element_by_class_name("city").click()
         city = d.find_element_by_id("cityField")
         city.send_keys(letter)
@@ -114,23 +123,17 @@ def loadcities():
         flatten = lambda l: [item for sublist in l for item in sublist]
         city.clear()
         time.sleep(.5)
-    x = 1
+
     print(citynames)
     citynames = reduce(lambda x, y: x + y, citynames)
 
     return citynames
 
-# Initialize Selenium
-chrome_options = Options()
-#chrome_options.add_argument('--headless')
-chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')
-d = webdriver.Chrome(options=chrome_options)
-d.get('https://asuntojen.hintatiedot.fi/haku/')
-d.set_window_size(1200, 920)
-#d.maximize_window()
-
 def main():
+    # Keep track of stats
+    postcode_count = 0
+    city_count = 0
+    row_count = 0
 
     # Go through the alphabet and load the city options
     citynames = loadcities()
@@ -146,6 +149,7 @@ def main():
 
     # Main loop
     for city in citynames:
+        city_count += 1
         d.get('https://asuntojen.hintatiedot.fi/haku/')
         data = []
         # Select the city selector
@@ -163,6 +167,7 @@ def main():
         postcodes = []
         for i in postcodelist:
             postcodes.append(i.get_attribute("value"))
+            postcode_count += 1
 
         for p in postcodes:
             print("Loading data for postcode " + p)
@@ -191,11 +196,16 @@ def main():
             continue
 
         if data:
+            row_count += len(data)
             if save_in_one_file:
                 final_result.extend(data)
             else:
                 save_data(data, city)
             time.sleep(1)
+
+    print("Total cities: " + str(city_count))
+    print("Total postcodes: " + str(postcode_count))
+    print("Total rows: " + str(row_count))
 
     if save_in_one_file:
         # Now do the actual saving
