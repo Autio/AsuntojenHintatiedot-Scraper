@@ -12,19 +12,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from functools import reduce
-
 import time
-def get_table(c, p):
-    c = c
-    p = p
-    # Need to know the Name, postcode, and then increment the page number
+
+# Keep track of stats
+postcode_count = 0
+city_count = 0
+
+# Configuration
+save_in_one_file = True
+
+def get_table(c, p, pg):
+    # Return the HTML of the correct search term by city, postcode and page
+    city = c
+    postcode = p
+    pagenumber = pg
+    # Need to know the Name, postcode, and then increment the page number until no more data is available
     # Should also append the postcode to the row to keep track of it
     # This implies we should only make one postcode query at a time
     # Could also append the date the code is run[
-    pagenumber = 1
-    request = "https://asuntojen.hintatiedot.fi/haku/?c=" + c + "&cr=1&ps="+ p + "&t="+ str(pagenumber) + "&l=0&z=1&search=1&sf=0&so=a&renderType=renderTypeTable&search=1"
+
+    request = "https://asuntojen.hintatiedot.fi/haku/?c=" + city + "&cr=1&ps="+ postcode + "&t=1&l=0&z="+ str(pagenumber) + "&search=1&sf=0&so=a&renderType=renderTypeTable&search=1"
     # Reference
-    # https://asuntojen.hintatiedot.fi/haku/?c=Asikkala&cr=1&ps=17200&nc=5&amin=&amax=&renderType=renderTypeTable&search=1
+    # https://asuntojen.hintatiedot.fi/haku/?c=Akaa&cr=1&ps=37800&nc=5&l=0&z=1&search=1&sf=0&so=a&renderType=renderTypeTable&search=1
+    # https://asuntojen.hintatiedot.fi/haku/?c=Espoo&cr=1&ps=02100&nc=112&amin=&amax=&renderType=renderTypeTable&search=1
+    # https://asuntojen.hintatiedot.fi/haku/?c=Espoo&cr=1&ps=02100&t=3&l=0&z=2&search=1&sf=0&so=a&renderType=renderTypeTable&submit=seuraava+sivu+%C2%BB
 
     r = requests.get(request)
     soup = BeautifulSoup(r.text, 'html.parser')
@@ -56,6 +67,7 @@ def scrape_data_for_table(table, city, postcode):
         columns = table_row.findAll('td')
         output_row = []
 
+        # Skip blank rows
         if len(columns) == 0:
             continue
 
@@ -63,7 +75,6 @@ def scrape_data_for_table(table, city, postcode):
             year_built = columns[6].text
         except:
             year_built = ""
-
 
         # Check if we should add the row or not
         if is_valid_row(year_built):
@@ -87,7 +98,7 @@ def save_data(output_rows, outputfile):
 def loadcities():
     citynames = []
 
-    alphabet = "A" #BCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
+    alphabet = "E" #BCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ"
     for letter in alphabet:
         #d.get('https://asuntojen.hintatiedot.fi/haku/')
 
@@ -116,10 +127,10 @@ chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 d = webdriver.Chrome(options=chrome_options)
 d.get('https://asuntojen.hintatiedot.fi/haku/')
-d.maximize_window()
+d.set_window_size(1200, 920)
+#d.maximize_window()
 
 def main():
-
 
     # Go through the alphabet and load the city options
     citynames = loadcities()
@@ -131,6 +142,7 @@ def main():
     city_element = d.find_element_by_id("cityField")
 
     data = []
+    final_result = []
 
     # Main loop
     for city in citynames:
@@ -141,7 +153,7 @@ def main():
         # Enter the city name
         city_element = d.find_element_by_id("cityField")
 
-        print("Loading data for " + city)
+        print("\nLoading data for " + city +"\n")
         city_element.send_keys(str(city)+"\n") # Make sure to hit Enter after the name
         time.sleep(.5)
 
@@ -154,13 +166,21 @@ def main():
 
         for p in postcodes:
             print("Loading data for postcode " + p)
-            table = get_table(city, p)
-            scrapedtable = scrape_data_for_table(table, city, p)
-            data.append(scrapedtable)
+            # Handle the potential for multiple pages
+            pg = 1
+            is_data = True
+
+            while is_data:
+                table = get_table(city, p, pg)
+                scrapedtable = scrape_data_for_table(table, city, p)
+                pg += 1
+                if scrapedtable == []:
+                    is_data = False
+
+                data.append(scrapedtable)
         time.sleep(1)
         # Need to re-find the element after the page refresh
         city_element = d.find_element_by_id("cityField")
-
         city_element.clear()
 
         # Handle empty dataset
@@ -171,7 +191,15 @@ def main():
             continue
 
         if data:
-            save_data(data, city)
+            if save_in_one_file:
+                final_result.extend(data)
+            else:
+                save_data(data, city)
             time.sleep(1)
+
+    if save_in_one_file:
+        # Now do the actual saving
+        save_data(final_result, "Final result")
+
 main()
 
