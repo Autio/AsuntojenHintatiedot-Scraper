@@ -1,78 +1,15 @@
 
 "
-
-
- 
-1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-", ,1,"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"
- ,1,"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "
 Yksiö
 Toijala / keskusta,1 hh+kk+s,kt,"39,00",80900,2074,2007,2/4,on,hyvä,"oma							D2018
 ",D2018
-Kylmäkoski,"1h,k",rt,"34,00",24000,706,1976,1/1,ei,tyyd.,"oma							C2013
-",C2013
 Toijala / rautala,1h+kk+kph/wc+vh,kt,"36,00",15487,430,1973,3/3,ei,huono,"vuokra							F2013
 ",F2013
 Toijala / nahkiala,1h+kk+kph/wc,kt,"27,00",33000,1222,1968,2/2,ei,tyyd.,"oma							F2013
 ",F2013
 Toijala / rauhanummi,1h+k+kph/wc+vh+...,kt,"33,00",38000,1152,1969,5/6,on,hyvä,"oma							F2013
 ",F2013
-Kylmäkoski / kirkonkylä,1h+kk+alkovi+s,rt,"39,00",29500,756,1990,1/1,ei,hyvä,"oma							
-",
 Toijala / keskusta,"1h,k,s,lasit.p.",kt,"38,00",60000,1579,1990,2/5,on,hyvä,"oma							C2007
 ",C2007
 Toijala / keskusta,"1h,kk",kt,"32,00",25000,781,1962,3/3,ei, ,"oma							F2013
@@ -100,8 +37,6 @@ Toijala / nahkiala,2h+kk+kph/wc+vh...,kt,"45,00",43000,956,1970,2/3,ei,huono,"om
 ",F2013
 Toijala / nahkiala,2h+k+s,rt,"44,00",60000,1364,1990,1/1,ei,hyvä,"oma							F2013
 ",F2013
-Kylmäkoski / kirkonkylä,2h+k+kph+vh,rt,"54,00",27000,500,1974,1/1,ei,hyvä,"vuokra							E2013
-",E2013
 Toijala / rauhanummi,2h+k+kph/wc+las...,kt,"54,00",54000,1000,1965,5/6,on,hyvä,"oma							F2013
 ",F2013
 Toijala / keskusta,2h+kk+kph/wc,kt,"40,00",34000,850,1958,1/2,ei,huono,"oma							F2013
@@ -137,97 +72,42 @@ Toijala,"3h, k, s",rt,"85,00",102000,1200,1990,1/1,ei,hyvä,"oma							D
 ",D
 Toijala / keskusta,3h+k+kph/wc+las...,kt,"77,00",81000,1052,1978,1/5,on,hyvä,"oma							E2018
 ",E2018
-Viiala / haihunkoski,"3h, k, kph, vh, p",kt,"76,00",52000,684,1973,1/3,ei,tyyd.,"oma							C2007
-",C2007
-Viiala / tillihaka,3h+k+wc+kph+s+v...,rt,"96,00",50000,521,1981,1/1,ei,tyyd.,"oma							D2013
-",D2013
 Toijala / luhtaniitty,3h+k+wc+vh+kph+s,rt,"77,00",115000,1494,1987,1/1,ei,hyvä,"oma							E2013
 ",E2013
-Viiala / keskusta,"3h,k,s",kt,"70,00",55000,786,1977,1/5,on, ,"oma							C2007
-",C2007
 Toijala,"3h,k,kh",kt,"70,00",41000,586,1962,2/3,ei, ,"oma							E2007
 ",E2007
-,"3h,k,s,autotall...",ok,"94,00",97500,1037,1984, ,ei,tyyd.,"oma							
-",
 ,"3-4h, k, sauna-os",ok,"87,00",130000,1494,1970, ,ei,hyvä,"oma							E2018
 ",E2018
-,3h+avokeitti...,ok,"160,00",170000,1063,2011,1/2,ei,hyvä,"oma							
-",
 ,"3h, k, kph",ok,"100,00",48000,480,1917,-1/1,ei,tyyd.,"oma							
-",
-,3h+k+wc+kph+s+e...,ok,"80,00",55000,688,1953, ,ei,tyyd.,"oma							
 ",
 ,"3-4 h, k, s",ok,"97,00",154000,1588,1997,1/1,ei,hyvä,"oma							
 ",
 Neljä huonetta tai enemmän
 Toijala,"4h, k, s",ok,"160,00",133000,831,1952,-1/2,ei,hyvä,"oma							
 ",
-Viiala,"oh, 2mh, k, kph...",ok,"110,00",154000,1400,1992,-1/1,ei,hyvä,"oma							E2018
-",E2018
 Toijala,"5h, k, s",ok,"146,00",180000,1233,1986,-1/1,ei,hyvä,"oma							
 ",
 Toijala / nahkiala,4h+k+kph/wc+wc+...,kt,"99,00",73000,737,1970,3/3,ei,huono,"oma							F2013
 ",F2013
 Toijala,"5h, k, s",ok,"129,00",198000,1535,2012,-1/1,ei,hyvä,"oma							
 ",
+Toijala,4h+k+wc+et+kuisti,ok,"80,00",76000,950,1945, ,ei,hyvä,"oma							
+",
+Toijala,"4h, k, s, khh, ...",ok,"107,00",153000,1430,1991,-1/1,ei,hyvä,"oma							
+",
+Toijala / keskusta,3-4h+k+s,kt,"89,00",270840,3043,2020,3/4,on,hyvä,"oma							B2018
+",B2018
+,"4h, k, khh, kph...",ok,"91,00",93000,1022,1950, ,ei,tyyd.,"oma							D2018
+",D2018
+,"4h, k, s",ok,"160,00",280000,1750,2012,-1/1,ei,hyvä,"oma							A2007
+",A2007
+,4h+k+khh+ph+s+a...,ok,"136,00",110000,809,1978, ,ei,hyvä,"oma							
+",
+,4h+k+ruokailut....,ok,"87,00",66000,759,1967, ,ei,tyyd.,"oma							
+",
+,5h+k+aulah.+2xw...,ok,"151,00",239000,1583,2003, ,ei,hyvä,"oma							
+",
+,4 h+k+kuisti+s+...,ok,"140,00",185000,1321,1950, ,ei,hyvä,"oma							D2018
+",D2018
 "
-
-
- 
-1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-", ,1,"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"
- ,1,"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 "
