@@ -1,4 +1,5 @@
 # -*- coding: iso-8859-1 -*-
+# Scraper to record all published house sale prices for Finland
 # Go to https://asuntojen.hintatiedot.fi/haku/
 # Cycle through all location options
 # Get the tabular data and save it down
@@ -13,7 +14,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from functools import reduce
 import time
-
 
 # Configuration
 save_in_one_file = True
@@ -37,7 +37,6 @@ def get_table(c, p, pg):
     # Need to know the Name, postcode, and then increment the page number until no more data is available
     # Should also append the postcode to the row to keep track of it
     # This implies we should only make one postcode query at a time
-    # Could also append the date the code is run[
 
     request = "https://asuntojen.hintatiedot.fi/haku/?c=" + city + "&cr=1&ps="+ postcode + "&t=1&l=0&z="+ str(pagenumber) + "&search=1&sf=0&so=a&renderType=renderTypeTable&search=1"
     # Reference
@@ -50,15 +49,6 @@ def get_table(c, p, pg):
 
     table = soup.select("#mainTable")
     return table
-
-
-def get_print_table():
-    r = requests.get(
-        "https://asuntojen.hintatiedot.fi/haku/?c=Akaa&cr=1&ps=37800&ps=37830&ps=37900&ps=37910&amin=&amax=&renderType=renderTypeTable&print=1&search=1&submit=Tulosta")
-
-    soup = BeautifulSoup(r.text, 'html.parser')
-    # print(soup.prettify())
-    table = soup.select("#mainTable")
 
 
 def is_valid_row(cell):
@@ -93,17 +83,10 @@ def scrape_data_for_table(table, city, postcode):
             # Prepend postcode to keep track of specific location
             output_row.append(postcode)
             for column in columns:
-                # Some kind of data handling
                 output_row.append(column.text)
             output_rows.append(output_row)
 
     return output_rows
-
-
-def save_data(output_rows, outputfile):
-    with open(outputfile + '.csv', 'w') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerows(output_rows)
 
 
 def loadcities():
@@ -129,6 +112,13 @@ def loadcities():
 
     return citynames
 
+
+def save_data(output_rows, outputfile):
+    with open(outputfile + '.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerows(output_rows)
+
+
 def main():
     # Keep track of stats
     postcode_count = 0
@@ -137,14 +127,18 @@ def main():
 
     # Go through the alphabet and load the city options
     citynames = loadcities()
+
+    # Load site with Selenium driver
     d.get('https://asuntojen.hintatiedot.fi/haku/')
 
-    # Select the city selector
+    # Select the city element
     citydiv = d.find_element_by_class_name("city").click()
     # Enter the city name
     city_element = d.find_element_by_id("cityField")
 
+    # Data contains the data for each city
     data = []
+    # Combination of all cities' data
     final_result = []
 
     # Main loop
@@ -152,19 +146,21 @@ def main():
         city_count += 1
         d.get('https://asuntojen.hintatiedot.fi/haku/')
         data = []
-        # Select the city selector
+
+        # Select the city e;ement
         citydiv = d.find_element_by_class_name("city").click()
         # Enter the city name
         city_element = d.find_element_by_id("cityField")
 
         print("\nLoading data for " + city +"\n")
-        city_element.send_keys(str(city)+"\n") # Make sure to hit Enter after the name
+        city_element.send_keys(str(city)+"\n")
         time.sleep(.5)
 
         # Pick out all of the postcodes, if any
         postal_select = d.find_element_by_id("postalSelect")
         postcodelist = postal_select.find_elements_by_tag_name("option")
         postcodes = []
+
         for i in postcodelist:
             postcodes.append(i.get_attribute("value"))
             postcode_count += 1
@@ -181,8 +177,8 @@ def main():
                 pg += 1
                 if scrapedtable == []:
                     is_data = False
-
                 data.append(scrapedtable)
+
         time.sleep(1)
         # Need to re-find the element after the page refresh
         city_element = d.find_element_by_id("cityField")
@@ -208,6 +204,7 @@ def main():
     print("Total rows: " + str(row_count))
 
     if save_in_one_file:
+
         # Now do the actual saving
         save_data(final_result, "Final result")
 
